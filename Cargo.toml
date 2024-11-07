@@ -1,0 +1,9 @@
+[package]
+name = "grss"
+version = "0.1.0"
+edition = "2021"
+author = ["joshua zimmerman","zimmerman.joshua@gmail.com"]
+readme = "README.md"
+repository = "git."
+license = "MIT"
+[dependencies]
