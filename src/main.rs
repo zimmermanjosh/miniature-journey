@@ -1,5 +1,7 @@
 // import necessary modules
+use anyhow::{Context, Result};
 use clap::Parser;
+use log::{info, warn};
 
 /// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser, Debug)]
@@ -8,23 +10,33 @@ struct Cli {
     /// The pattern to search for.
     #[arg(short = 'p', long, value_name = "foobar")]
     pattern: String,
+
     /// The file path to search in || the path to the file to read.
     #[arg(short = 'f', long, value_name = "~/test.txt")]
-    path: std::path::PathBuf,
+    path: std::path::PathBuf
 }
+fn main() -> Result<(), anyhow::Error> {//+
+    env_logger::init();
+    info!("starting up");
+    warn!("oops, nothing implemented!");
 
-fn main() {
-    //use the clap crate to parse command-line arguments
-    let args: Cli = Cli::parse();
+    let pb = indicatif::ProgressBar::new(100);
+    for i in 0..100 {
+        //do_hard_work();
 
-    //open the file for reading
-    let content: String = std::fs::read_to_string(&args.path).expect("could not read file");
+        let args: Cli = Cli::parse();//+
 
-    for line in content.lines() {
-        if line.contains(&args.pattern) {
-            println!("{}", line);
+        let content = std::fs::read_to_string(&args.path)//+
+            .with_context(|| format!("could not read file `{}`", args.path.display()))?;//+
+
+        for line in content.lines() {//+
+            if line.contains(&args.pattern) {//+
+                println!("{}", line);//+
+            }//+
         }
+        pb.println(format!("[+] finished #{}", i));//+
+        pb.inc(1);
     }
-
-    println!("pattern: {:?}, path: {:?}", args.pattern, args.path)
+    pb.finish_with_message("done");
+    Ok(())//+
 }
