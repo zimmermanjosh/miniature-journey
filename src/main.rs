@@ -2,6 +2,7 @@
 use anyhow::{Context, Result};
 use clap::Parser;
 use log::{info, warn};
+use std::{thread, time::Duration};
 
 /// Search for a pattern in a file and display the lines that contain it.
 #[derive(Parser, Debug)]
@@ -16,6 +17,11 @@ struct Cli {
     path: std::path::PathBuf
 }
 fn main() -> Result<(), anyhow::Error> {//+
+    ctrlc::set_handler(move || {
+        println!("received Ctrl+C!");
+    })
+    .expect("Error setting Ctrl-C handler");
+
     env_logger::init();
     info!("starting up");
     warn!("oops, nothing implemented!");
