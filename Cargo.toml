@@ -7,3 +7,4 @@ readme = "README.md"
 repository = "git."
 license = "MIT"
 [dependencies]
+clap = {version = "4.0", features = ["derive"]}
